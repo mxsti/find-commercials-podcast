@@ -134,3 +134,4 @@ dmypy.json
 # misc
 media/
 initial/
+*.db
