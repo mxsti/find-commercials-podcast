@@ -1,0 +1,24 @@
+{
+    "episodes": [
+        {
+            "title": "Pilot Folge",
+            "id": "jdsijdsi",
+            "href": "https://baywatch-berlin.podigee.io/171-new-episode",
+            "number": 152,
+            "length_seconds": 3843,
+            "total_commercial_length_seconds": 14330,
+            "commercials": [
+                {
+                    "start_at": 1233,
+                    "end_at": 1333,
+                    "commercial_length_seconds": 100
+                },
+                {
+                    "start_at": 1882,
+                    "end_at": 1921,
+                    "commercial_length_seconds": 40
+                }
+            ]
+        }
+      ]
+  }

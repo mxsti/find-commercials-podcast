@@ -47,13 +47,16 @@ def find_offset(episode, commercial_jingle):
     # peak - threshold we consider a match
     threshold = 10
     
+    # early exit -> no commercial was found
+    if value - threshold < threshold: return []
+    
     # same logic as with the peak, repeat until we leave threshold range
-    while value > max_value - threshold:
+    while value > max_value - threshold: 
         occ = np.argmax(correlation) # correct correleation array change (few frames don't matter though)
         value = correlation[occ]
         occurrences.append(occ)
         correlation = np.delete(correlation, occ)
-
+        
     # convert indicies to timestamps (offset in seconds) with the sampling rate
     timestamps = list(map(lambda o: round(o / sr_within, 2), occurrences))
 
@@ -79,9 +82,8 @@ def find_commercials():
     
 
 def write_data_to_db(episode, commercials):
-    con = sqlite3.connect("commercialinfo.db")
+    con = sqlite3.connect(os.getenv('DB_PATH'))
     cur = con.cursor()
-    
     # alter the commercial array for easier handling
     commercial_info = extract_commercial_info(commercials)
     
@@ -129,13 +131,15 @@ def calc_episode_length():
 
 # starting point of script
 load_dotenv()
-con = sqlite3.connect(os.getenv('DB_PATH'))
-cur = con.cursor()
 feed = feedparser.parse(os.getenv('PODCAST_RSS_URL'))
 
+counter = 1
+episode_amount = len(feed.entries)
+
 # one entry is one podcast episode from the rss feed
-for entry in feed.entries:
+for entry in feed.entries[1:]:
     print('########################')
+    print(f"progress {counter}/{episode_amount}")
     # download the mp3 file
     asyncio.run(download_episode(entry))
     
@@ -144,3 +148,5 @@ for entry in feed.entries:
     
     # write the info to the database
     write_data_to_db(entry, commercials)
+    
+    counter+=1
